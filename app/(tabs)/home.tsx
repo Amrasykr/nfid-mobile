@@ -1,16 +1,20 @@
+import { fetchDispensers } from "@/api/dispensers";
 import { ComingSoon } from "@/components/section/coming-soon";
-import { GalonData } from "@/components/section/dispenser-card";
 import { DispenserDescriptionCard } from "@/components/section/dispenser-description-card";
 import { DispenserGrid } from "@/components/section/dispenser-grid";
 import Header from "@/components/section/header";
 import { MenuItem, MenuPills } from "@/components/section/menu-pill";
+import { DispenserData } from "@/interfaces/dispenser";
 import { Car, DoorOpen, Droplet } from "lucide-react-native";
-import { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
   const [selectedMenu, setSelectedMenu] = useState<string>("galon");
+  const [dispenserData, setDispenserData] = useState<DispenserData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const menuItems: MenuItem[] = [
     { id: "galon", label: "Smart Dispenser", icon: Droplet, available: true },
@@ -18,14 +22,24 @@ export default function Home() {
     { id: "door", label: "Smart Door", icon: DoorOpen, available: false },
   ];
 
-  const galonData: GalonData[] = [
-    { id: 1, location: "A102", waterLevel: 85, status: "good" },
-    { id: 2, location: "A405", waterLevel: 45, status: "medium" },
-    { id: 3, location: "B201", waterLevel: 15, status: "low" },
-    { id: 4, location: "C103", waterLevel: 92, status: "good" },
-    { id: 5, location: "D304", waterLevel: 68, status: "good" },
-    { id: 6, location: "E502", waterLevel: 28, status: "medium" },
-  ];
+  // Fetch dispenser data from API
+  useEffect(() => {
+    const loadDispensers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchDispensers();
+        setDispenserData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch dispensers");
+        console.error("Error loading dispensers:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDispensers();
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -48,7 +62,24 @@ export default function Home() {
         {selectedMenu === "galon" && (
           <View className="gap-4">
             <DispenserDescriptionCard />
-            <DispenserGrid data={galonData} />
+            
+            {/* Loading State */}
+            {loading && (
+              <View className="items-center justify-center py-8">
+                <ActivityIndicator size="large" color="#eff0a3" />
+                <Text className="text-sm text-gray-500 mt-2">Loading dispensers...</Text>
+              </View>
+            )}
+            
+            {/* Error State */}
+            {error && (
+              <View className="bg-red-50 p-4 rounded-lg">
+                <Text className="text-red-600 font-urban-semibold">Error: {error}</Text>
+              </View>
+            )}
+            
+            {/* Dispenser Grid */}
+            {!loading && !error && <DispenserGrid data={dispenserData} />}
           </View>
         )}
 

@@ -1,15 +1,10 @@
+import { DispenserData } from "@/interfaces/dispenser";
+import { useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import { WaveEffect } from "./wave-effect";
 
-export interface GalonData {
-  id: number;
-  location: string;
-  waterLevel: number;
-  status: "good" | "medium" | "low";
-}
-
 interface DispenserCardProps {
-  galon: GalonData;
+  galon: DispenserData;
   onPress?: () => void;
 }
 
@@ -25,11 +20,21 @@ const getStatusColor = (status: "good" | "medium" | "low"): string => {
 };
 
 export const DispenserCard = ({ galon, onPress }: DispenserCardProps) => {
+  const router = useRouter();
+
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      router.push(`/dispenser-detail?id=${galon.id}`);
+    }
+  };
+
   return (
     <TouchableOpacity
       className="bg-white rounded-2xl p-4 w-[48%]"
       activeOpacity={0.7}
-      onPress={onPress}
+      onPress={handlePress}
     >
       {/* Location Badge */}
       <View className="flex-row items-center justify-between mb-4">

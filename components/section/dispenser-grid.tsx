@@ -1,8 +1,9 @@
+import { DispenserData } from "@/interfaces/dispenser";
 import { Text, View } from "react-native";
-import { DispenserCard, GalonData } from "./dispenser-card";
+import { DispenserCard } from "./dispenser-card";
 
 interface DispenserGridProps {
-  data: GalonData[];
+  data: DispenserData[];
 }
 
 export const DispenserGrid = ({ data }: DispenserGridProps) => {
