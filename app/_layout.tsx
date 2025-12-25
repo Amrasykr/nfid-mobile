@@ -1,24 +1,27 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import * as Font from "expo-font";
+import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
+import "./globals.css";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+  useEffect(() => {
+    async function setup() {
+      await Font.loadAsync({
+        "Urban-Regular": require("../assets/fonts/Urbanist-Regular.ttf"),
+        "Urban-Bold": require("../assets/fonts/Urbanist-Bold.ttf"),
+        "Urban-SemiBold": require("../assets/fonts/Urbanist-SemiBold.ttf"),
+        "Urban-Light": require("../assets/fonts/Urbanist-Light.ttf"),
+      });
+
+      setFontsLoaded(true);
+    }
+
+    setup();
+  }, []);
+
+  if (!fontsLoaded) return null;
+
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
