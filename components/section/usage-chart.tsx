@@ -42,10 +42,10 @@ export const UsageChart = ({ data }: UsageChartProps) => {
         Weekly Usage
       </Text>
       <View className="bg-white rounded-2xl p-5">
-        <View className="flex-row items-end justify-between h-40 mb-3">
+        <View className="flex-row items-end justify-between h-40 py-4">
           {dailyUsage.map((item) => (
             <View key={item.day} className="items-center flex-1">
-              <View className="w-full items-center justify-end flex-1 px-1">
+              <View className="w-full items-center justify-end flex-1 px-1 py-2">
                 {item.usage > 0 && (
                   <Text className="text-xs font-urban-semibold text-black mb-1">
                     {item.usage}L
@@ -60,7 +60,7 @@ export const UsageChart = ({ data }: UsageChartProps) => {
                   }}
                 />
               </View>
-              <Text className="text-xs font-urban text-gray-500 mt-2">
+              <Text className="text-xs font-urban text-gray-500">
                 {item.day.substring(0, 3)}
               </Text>
             </View>

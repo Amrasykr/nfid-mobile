@@ -1,5 +1,6 @@
 import { DispenserData } from "@/interfaces/dispenser";
 import { useRouter } from "expo-router";
+import { WifiOff } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 import { WaveEffect } from "./wave-effect";
 
@@ -8,7 +9,7 @@ interface DispenserCardProps {
   onPress?: () => void;
 }
 
-const getStatusColor = (status: "good" | "medium" | "low"): string => {
+const getStatusColor = (status: "good" | "medium" | "low" | "offline"): string => {
   switch (status) {
     case "good":
       return "#cfdeca";
@@ -16,6 +17,8 @@ const getStatusColor = (status: "good" | "medium" | "low"): string => {
       return "#eff0a3";
     case "low":
       return "#f5c6c6";
+    case "offline":
+      return "#e0e0e0"; // Gray color for offline
   }
 };
 
@@ -29,6 +32,8 @@ export const DispenserCard = ({ galon, onPress }: DispenserCardProps) => {
       router.push(`/dispenser-detail?id=${galon.id}`);
     }
   };
+
+  const isOffline = galon.status === "offline";
 
   return (
     <TouchableOpacity
@@ -51,26 +56,39 @@ export const DispenserCard = ({ galon, onPress }: DispenserCardProps) => {
         />
       </View>
 
-      {/* Water Level */}
+      {/* Water Level or Offline Status */}
       <View className="relative h-28 overflow-hidden py-2">
-        <View
-          className="absolute bottom-0 left-0 right-0 rounded-b-2xl"
-          style={{
-            height: `${galon.waterLevel}%`,
-            backgroundColor: getStatusColor(galon.status),
-          }}
-        >
-          {/* Wave Animation */}
-          <WaveEffect color={getStatusColor(galon.status)} />
-        </View>
-        <View className="absolute inset-0 items-center justify-center">
-          <Text className="text-3xl font-urban-bold text-black">
-            {galon.waterLevel}%
-          </Text>
-          <Text className="text-xs font-urban-semibold text-black/60 mt-1">
-            Water Level
-          </Text>
-        </View>
+        {isOffline ? (
+          // Offline Status
+          <View className="absolute inset-0 items-center justify-center rounded-2xl">
+            <WifiOff size={32} color="#9e9e9e" />
+            <Text className="text-sm font-urban-bold text-gray-500 mt-2">
+              Offline
+            </Text>
+          </View>
+        ) : (
+          // Water Level Display
+          <>
+            <View
+              className="absolute bottom-0 left-0 right-0 rounded-b-2xl"
+              style={{
+                height: `${galon.waterLevel}%`,
+                backgroundColor: getStatusColor(galon.status),
+              }}
+            >
+              {/* Wave Animation */}
+              <WaveEffect color={getStatusColor(galon.status)} />
+            </View>
+            <View className="absolute inset-0 items-center justify-center">
+              <Text className="text-3xl font-urban-bold text-black">
+                {galon.waterLevel}%
+              </Text>
+              <Text className="text-xs font-urban-semibold text-black/60 mt-1">
+                Water Level
+              </Text>
+            </View>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );

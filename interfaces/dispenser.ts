@@ -12,7 +12,7 @@ export interface DispenserData {
   updatedAt: FirestoreTimestamp;
   lastActive: FirestoreTimestamp;
   waterLevel: number;
-  status: "good" | "medium" | "low";
+  status: "good" | "medium" | "low" | "offline";
   building: string;
   capacity: number;
   remaining: number;

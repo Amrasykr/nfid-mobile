@@ -5,12 +5,16 @@ import { LastUsers } from "@/components/section/last-users";
 import { SystemInfoCard } from "@/components/section/system-info-card";
 import { UsageChart } from "@/components/section/usage-chart";
 import { WaterLevelCard } from "@/components/section/water-level-card";
+import { SkeletonDetailHeader } from "@/components/skeleton/skeleton-detail-header";
+import { SkeletonSystemInfo } from "@/components/skeleton/skeleton-system-info";
+import { SkeletonUsageChart } from "@/components/skeleton/skeleton-usage-chart";
+import { SkeletonWaterLevel } from "@/components/skeleton/skeleton-water-level";
 import { DispenserData } from "@/interfaces/dispenser";
 import { UsageHistoryData } from "@/interfaces/usage";
 import { formatRelativeTime, formatShortDate } from "@/utils/formatters";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DispenserDetail() {
@@ -62,10 +66,16 @@ export default function DispenserDetail() {
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-background">
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#eff0a3" />
-          <Text className="text-sm text-gray-500 mt-2">Loading dispenser details...</Text>
-        </View>
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <SkeletonDetailHeader />
+          <SkeletonWaterLevel />
+          <SkeletonSystemInfo />
+          <SkeletonUsageChart />
+        </ScrollView>
       </SafeAreaView>
     );
   }

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { ClockArrowUp, Droplet, Home, Settings } from "lucide-react-native";
+import { Bell, Home, Settings } from "lucide-react-native";
 import { StatusBar, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -64,15 +64,15 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="history"
+          name="notification"
           options={{
-            title: "History",
+            title: "Notification",
             tabBarIcon: ({ color, size, focused }) => (
               <TabBarButton
                 focused={focused}
-                label="History"
+                label="Notification"
                 icon={
-                  <ClockArrowUp
+                  <Bell
                     color={focused ? "#212121" : "#9ca3af"}
                     size={20}
                   />

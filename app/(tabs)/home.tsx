@@ -4,10 +4,11 @@ import { DispenserDescriptionCard } from "@/components/section/dispenser-descrip
 import { DispenserGrid } from "@/components/section/dispenser-grid";
 import Header from "@/components/section/header";
 import { MenuItem, MenuPills } from "@/components/section/menu-pill";
+import { SkeletonDispenserCard } from "@/components/skeleton/skeleton-dispenser-card";
 import { DispenserData } from "@/interfaces/dispenser";
 import { Car, DoorOpen, Droplet } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
@@ -30,6 +31,7 @@ export default function Home() {
         setError(null);
         const data = await fetchDispensers();
         setDispenserData(data);
+        console.log("Dispenser data loaded:", data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch dispensers");
         console.error("Error loading dispensers:", err);
@@ -40,6 +42,39 @@ export default function Home() {
 
     loadDispensers();
   }, []);
+
+  // Auto-refresh dispenser data every 3 minutes when on Smart Dispenser tab
+  useEffect(() => {
+    // Only set up polling when Smart Dispenser tab is active
+    if (selectedMenu !== "galon") {
+      return;
+    }
+
+    // const POLLING_INTERVAL = 3 * 60 * 1000; // 3 minutes in milliseconds
+    const POLLING_INTERVAL = 15 * 1000; // 15 seconds in milliseconds
+
+    const refreshData = async () => {
+      try {
+        console.log("[Polling] Refreshing dispenser data...");
+        const data = await fetchDispensers();
+        setDispenserData(data);
+        console.log("[Polling] Data refreshed successfully");
+      } catch (err) {
+        // Silently log errors during background refresh to avoid disrupting UI
+        console.error("[Polling] Error refreshing dispensers:", err);
+      }
+    };
+
+    // Set up interval for polling
+    const intervalId = setInterval(refreshData, POLLING_INTERVAL);
+
+    // Cleanup interval when component unmounts or menu changes
+    return () => {
+      console.log("[Polling] Stopped polling");
+      clearInterval(intervalId);
+    };
+  }, [selectedMenu]);
+
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -65,9 +100,15 @@ export default function Home() {
             
             {/* Loading State */}
             {loading && (
-              <View className="items-center justify-center py-8">
-                <ActivityIndicator size="large" color="#eff0a3" />
-                <Text className="text-sm text-gray-500 mt-2">Loading dispensers...</Text>
+              <View>
+                <Text className="text-xl font-urban-bold text-black mb-4">
+                  Active Dispensers
+                </Text>
+                <View className="flex-row flex-wrap gap-3">
+                  {[1, 2, 3, 4, 5, 6].map((item) => (
+                    <SkeletonDispenserCard key={item} />
+                  ))}
+                </View>
               </View>
             )}
             
