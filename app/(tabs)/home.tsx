@@ -31,7 +31,6 @@ export default function Home() {
         setError(null);
         const data = await fetchDispensers();
         setDispenserData(data);
-        console.log("Dispenser data loaded:", data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch dispensers");
         console.error("Error loading dispensers:", err);
@@ -50,15 +49,12 @@ export default function Home() {
       return;
     }
 
-    // const POLLING_INTERVAL = 3 * 60 * 1000; // 3 minutes in milliseconds
-    const POLLING_INTERVAL = 15 * 1000; // 15 seconds in milliseconds
+    const POLLING_INTERVAL = 2 * 60 * 1000; // 2 minutes in milliseconds
 
     const refreshData = async () => {
       try {
-        console.log("[Polling] Refreshing dispenser data...");
         const data = await fetchDispensers();
         setDispenserData(data);
-        console.log("[Polling] Data refreshed successfully");
       } catch (err) {
         // Silently log errors during background refresh to avoid disrupting UI
         console.error("[Polling] Error refreshing dispensers:", err);
@@ -70,7 +66,6 @@ export default function Home() {
 
     // Cleanup interval when component unmounts or menu changes
     return () => {
-      console.log("[Polling] Stopped polling");
       clearInterval(intervalId);
     };
   }, [selectedMenu]);
