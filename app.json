@@ -1,17 +1,22 @@
 {
   "expo": {
-    "name": "nfid-mobile",
-    "slug": "nfid-mobile",
+    "name": "aqua access",
+    "slug": "aqua-access-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "nfidmobile",
+    "scheme": "aquaaccess",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aquaaccess.mobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.aquaaccess.mobile",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -43,6 +48,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "1641cfed-e6c4-4a30-a35b-5c2db7b89ad5"
+      }
+    },
+    "owner": "amrasykr"
   }
 }

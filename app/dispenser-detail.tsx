@@ -50,6 +50,7 @@ export default function DispenserDetail() {
         setRecentUsage(recentData);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Dispenser not found";
+        console.log(errorMessage);
         setError(errorMessage);
       } finally {
         setLoading(false);
